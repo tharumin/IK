@@ -1,4 +1,5 @@
 const { cmd } = require('../command');
+const { sleep } = require('../lib/functions'); // Import sleep function
 
 cmd({
     pattern: "chai",
@@ -8,8 +9,15 @@ cmd({
     react: "☕",
     filename: __filename
 },
-async (conn, mek, m, { from, reply }) => {
+async (conn, mek, m, { from, reply, isCreator }) => {
     try {
+        // Owner restriction check
+        if (!isCreator) {
+            return await conn.sendMessage(from, {
+                text: "*📛 This is an owner command.*"
+            }, { quoted: mek });
+        }
+
         // making
         const brewingMsg = await conn.sendMessage(from, { 
             text: 'Brewing your chai... ☕' 
@@ -31,7 +39,7 @@ async (conn, mek, m, { from, reply }) => {
 
         // Show each step with delay
         for (const step of chaiSteps) {
-            await new Promise(resolve => setTimeout(resolve, 1200));
+            await sleep(1000); // 1 second delay between steps
             await conn.relayMessage(
                 from,
                 {
@@ -48,14 +56,16 @@ async (conn, mek, m, { from, reply }) => {
         }
 
         // Final text message
+        await sleep(1000);
         await conn.sendMessage(from, { 
-            text: 'Your masala chai is ready! ☕✨ Wait sending you...' 
+            text: 'Your masala chai is ready! ☕✨\nWait sending you...' 
         }, { quoted: mek });
 
         // Send the famous meme image
+        await sleep(1000);
         await conn.sendMessage(from, {
             image: { url: "https://files.catbox.moe/dyzdgl.jpg" },
-            caption: "- *The Tea Was Fantastic* ☕\n> _(Remember 2019 😂💀🗿)_ \n- *2019 X 2025 🗿😎*",
+            caption: "- *The Tea Was Fantastic* ☕\n> _(Remember 2019 😂💀🗿)_ \n - *2019 X 2025 🗿😎*",
             mimetype: "image/jpeg"
         }, { quoted: mek });
 
