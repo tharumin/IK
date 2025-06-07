@@ -4,7 +4,6 @@ const os = require("os")
 const {runtime} = require('../lib/functions')
 const axios = require('axios')
 const {sleep} = require('../lib/functions')
-const fetch = require('node-fetch');
 
 cmd({
     pattern: "repo",
@@ -21,14 +20,10 @@ async (conn, mek, m, { from, reply }) => {
         // Extract username and repo name from the URL
         const [, username, repoName] = githubRepoURL.match(/github\.com\/([^/]+)\/([^/]+)/);
 
-        // Fetch repository details using GitHub API
-        const response = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
+        // Fetch repository details using GitHub API with axios
+        const response = await axios.get(`https://api.github.com/repos/${username}/${repoName}`);
         
-        if (!response.ok) {
-            throw new Error(`GitHub API request failed with status ${response.status}`);
-        }
-
-        const repoData = await response.json();
+        const repoData = response.data;
 
         // Format the repository information in new stylish format
         const formattedInfo = `
@@ -70,3 +65,5 @@ async (conn, mek, m, { from, reply }) => {
         reply("❌ Sorry, something went wrong while fetching the repository information. Please try again later.");
     }
 });
+
+
