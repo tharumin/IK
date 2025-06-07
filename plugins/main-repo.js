@@ -27,7 +27,7 @@ async (conn, mek, m, { from, reply }) => {
 
         // Format the repository information in new stylish format
         const formattedInfo = `
-╭─〔 🚀 *KHAN-MD REPOSITORY* 〕
+╭─〔 *KHAN-MD REPOSITORY* 〕
 │
 ├─ *📌 Repository Name:* ${repoData.name}
 ├─ *👑 Owner:* JawadYT36
@@ -41,7 +41,7 @@ async (conn, mek, m, { from, reply }) => {
 ├─ *🌐 Join Channel:*
 │   https://whatsapp.com/channel/0029VatOy2EAzNc2WcShQw1j
 │
-╰─ *⚡ Powered by KHAN-MD* 🍁
+╰─ *⚡ Powered by KHAN-MD*
 `.trim();
 
         // Send an image with the formatted info as a caption
