@@ -13,13 +13,13 @@ async (conn, mek, m, { from, reply }) => {
         // making
         const brewingMsg = await conn.sendMessage(from, { 
             text: 'Brewing your chai... ☕' 
-        });
+        }, { quoted: mek });
 
         // Chai brewing animation with fun steps
         const chaiSteps = [
             "Boiling water... 💦",
             "Adding Assam tea leaves... 🍃",
-            "Pouring fresh milk... �",
+            "Pouring fresh milk... 🥛",
             "Crushing ginger & cardamom... 🧄🌿",
             "Adding just the right sugar... ⚖️",
             "Letting it boil to perfection... ♨️",
@@ -49,18 +49,18 @@ async (conn, mek, m, { from, reply }) => {
 
         // Final text message
         await conn.sendMessage(from, { 
-            text: 'Your masala chai is ready! ☕✨\n wait sending you...' 
-        });
+            text: 'Your masala chai is ready! ☕✨ Wait sending you...' 
+        }, { quoted: mek });
 
         // Send the famous meme image
         await conn.sendMessage(from, {
             image: { url: "https://files.catbox.moe/dyzdgl.jpg" },
-            caption: "- *The Tea Was Fantastic* ☕\n> _( Remember 2019 😂💀🗿)_ \n - *2019 X 2025 🗿😎*",
+            caption: "- *The Tea Was Fantastic* ☕\n> _(Remember 2019 😂💀🗿)_ \n- *2019 X 2025 🗿😎*",
             mimetype: "image/jpeg"
-        });
+        }, { quoted: mek });
 
     } catch (e) {
         console.log(e);
         reply(`❌ *Chai spilled!* ${e.message}\n_Better luck next time!_`);
     }
-});    
+});
