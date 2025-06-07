@@ -13,14 +13,12 @@ cmd({
     filename: __filename,
 },
 async (conn, mek, m, { from, reply }) => {
-    const githubRepoURL = 'https://github.com/JawadYT36/KHAN-MD';
+    const username = 'JawadYT36'; // Direct username
+    const botName = 'KHAN-MD';    // Direct bot name
 
     try {
-        // Extract username and repo name from the URL
-        const [, username, repoName] = githubRepoURL.match(/github\.com\/([^/]+)\/([^/]+)/);
-
         // Fetch repository details using GitHub API
-        const response = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
+        const response = await fetch(`https://api.github.com/repos/${username}/${botName}`);
         
         if (!response.ok) {
             throw new Error(`GitHub API request failed with status ${response.status}`);
@@ -33,7 +31,7 @@ async (conn, mek, m, { from, reply }) => {
 
         // Send image with caption
         await conn.sendMessage(from, {
-            image: { url: `https://files.catbox.moe/juroe8.jpg` },
+            image: { url: `https://files.catbox.moe/7zfdcq.jpg` },
             caption: formattedInfo,
             contextInfo: { 
                 mentionedJid: [m.sender],
