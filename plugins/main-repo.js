@@ -1,7 +1,4 @@
-const fs = require('fs');
-const path = require('path');
 const fetch = require('node-fetch');
-const config = require('../config');    
 const { cmd } = require('../command');
 
 cmd({
@@ -13,12 +10,13 @@ cmd({
     filename: __filename,
 },
 async (conn, mek, m, { from, reply }) => {
-    const username = 'JawadYT36'; // Direct username
-    const botName = 'KHAN-MD';    // Direct bot name
-
     try {
-        // Fetch repository details using GitHub API
-        const response = await fetch(`https://api.github.com/repos/${username}/${botName}`);
+        // GitHub repo details (static)
+        const username = 'JawadYT36';
+        const repoName = 'KHAN-MD';
+
+        // Fetch repository details from GitHub API
+        const response = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
         
         if (!response.ok) {
             throw new Error(`GitHub API request failed with status ${response.status}`);
@@ -33,24 +31,6 @@ async (conn, mek, m, { from, reply }) => {
         await conn.sendMessage(from, {
             image: { url: `https://files.catbox.moe/7zfdcq.jpg` },
             caption: formattedInfo,
-            contextInfo: { 
-                mentionedJid: [m.sender],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363354023106228@newsletter',
-                    newsletterName: 'JawadTechX',
-                    serverMessageId: 143
-                }
-            }
-        }, { quoted: mek });
-
-        // Send local audio file
-        const audioPath = path.join(__dirname, '../assets/menu.m4a');
-        await conn.sendMessage(from, {
-            audio: fs.readFileSync(audioPath),
-            mimetype: 'audio/mp4',
-            ptt: true,
             contextInfo: { 
                 mentionedJid: [m.sender],
                 forwardingScore: 999,
