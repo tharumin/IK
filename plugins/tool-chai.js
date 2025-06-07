@@ -10,7 +10,7 @@ cmd({
 },
 async (conn, mek, m, { from, reply }) => {
     try {
-        // Initial brewing message with British tea joke
+        // making
         const brewingMsg = await conn.sendMessage(from, { 
             text: 'Brewing your chai... ☕' 
         });
@@ -55,7 +55,7 @@ async (conn, mek, m, { from, reply }) => {
         // Send the famous meme image
         await conn.sendMessage(from, {
             image: { url: "https://files.catbox.moe/dyzdgl.jpg" },
-            caption: "*The Tea Was Fantastic* ☕\n> _( Remember 2019 😂💀🗿)_",
+            caption: "- *The Tea Was Fantastic* ☕\n> _( Remember 2019 😂💀🗿)_ \n - *2019 X 2025 🗿😎*",
             mimetype: "image/jpeg"
         });
 
