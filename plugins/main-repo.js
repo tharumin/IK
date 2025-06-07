@@ -1,9 +1,14 @@
-const axios = require('axios');
-const { cmd } = require('../command');
+const config = require('../config')
+const {cmd , commands} = require('../command')
+const os = require("os")
+const {runtime} = require('../lib/functions')
+const axios = require('axios')
+const {sleep} = require('../lib/functions')
+const fetch = require('node-fetch');
 
 cmd({
     pattern: "repo",
-    alias: ["sc", "script", "info"],
+    alias: ["sc", "script", "repository"],
     desc: "Fetch information about a GitHub repository.",
     react: "📂",
     category: "info",
@@ -13,22 +18,40 @@ async (conn, mek, m, { from, reply }) => {
     const githubRepoURL = 'https://github.com/JawadYT36/KHAN-MD';
 
     try {
-        // Extract username and repository name
+        // Extract username and repo name from the URL
         const [, username, repoName] = githubRepoURL.match(/github\.com\/([^/]+)\/([^/]+)/);
 
-        // Fetch repo info using axios
-        const response = await axios.get(`https://api.github.com/repos/${username}/${repoName}`);
-
-        if (response.status !== 200 || !response.data) {
-            throw new Error("GitHub API request failed.");
+        // Fetch repository details using GitHub API
+        const response = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
+        
+        if (!response.ok) {
+            throw new Error(`GitHub API request failed with status ${response.status}`);
         }
 
-        const repoData = response.data;
+        const repoData = await response.json();
 
-        const formattedInfo = `*BOT NAME:*\n> ${repoData.name}\n\n*OWNER NAME:*\n> ${repoData.owner.login}\n\n*STARS:*\n> ${repoData.stargazers_count}\n\n*FORKS:*\n> ${repoData.forks_count}\n\n*GITHUB LINK:*\n> ${repoData.html_url}\n\n*DESCRIPTION:*\n> ${repoData.description || 'No description'}\n\n*Don't Forget To Star and Fork Repository*\n\n> *© Powered By JawadTechX 🖤*`;
+        // Format the repository information in new stylish format
+        const formattedInfo = `
+╭─〔 🚀 *KHAN-MD REPOSITORY* 〕
+│
+├─ *📌 Repository Name:* ${repoData.name}
+├─ *👑 Owner:* JawadYT36
+├─ *⭐ Stars:* ${repoData.stargazers_count}
+├─ *⑂ Forks:* ${repoData.forks_count}
+├─ *📝 Description:* ${repoData.description || 'World Best WhatsApp Bot powered by JawadTechX'}
+│
+├─ *🔗 GitHub Link:*
+│   ${repoData.html_url}
+│
+├─ *🌐 Join Channel:*
+│   https://whatsapp.com/channel/0029VatOy2EAzNc2WcShQw1j
+│
+╰─ *⚡ Powered by KHAN-MD* 🍁
+`.trim();
 
+        // Send an image with the formatted info as a caption
         await conn.sendMessage(from, {
-            image: { url: 'https://files.catbox.moe/7zfdcq.jpg' },
+            image: { url: `https://files.catbox.moe/7zfdcq.jpg` }, // Replace with your image URL
             caption: formattedInfo,
             contextInfo: { 
                 mentionedJid: [m.sender],
@@ -36,14 +59,14 @@ async (conn, mek, m, { from, reply }) => {
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363354023106228@newsletter',
-                    newsletterName: 'JawadTechX',
+                    newsletterName: 'KHAN-MD',
                     serverMessageId: 143
                 }
             }
         }, { quoted: mek });
 
     } catch (error) {
-        console.error("Error in .repo command:", error.message);
-        reply("❌ Could not fetch repository info. Please try again later.");
+        console.error("Error in repo command:", error);
+        reply("❌ Sorry, something went wrong while fetching the repository information. Please try again later.");
     }
-});  
+});
