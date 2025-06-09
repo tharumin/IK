@@ -26,7 +26,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         };
 
         const password = generatePassword(length);
-        const message = `🔐 *Your Strong Password* 🔐\n\nPlease find your generated password below:\n\n *ɢᴇɴᴇʀᴀᴛᴇᴅ ʙʏ sᴜʙᴢᴇʀᴏ*`;
+        const message = `🔐 *Your Strong Password* 🔐\n\nPlease find your generated password below`;
 
         // Send initial notification message
         await conn.sendMessage(from, { text: message }, { quoted: mek });
