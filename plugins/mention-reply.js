@@ -43,7 +43,7 @@ cmd({
             title: config.BOT_NAME || "KHAN-MD 🥀",
             body: config.DESCRIPTION || "POWERED BY JAWAD TECHX 🤌💗",
             mediaType: 1,
-            renderLargerThumbnail: true,
+            renderLargerThumbnail: false,
             thumbnail: thumbnailBuffer,
             mediaUrl: "https://files.catbox.moe/l2t3e0.jpg", // Static image URL
             sourceUrl: "https://wa.me/message/INB2QVGXHQREO1",
