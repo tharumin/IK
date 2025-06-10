@@ -4,34 +4,33 @@ const Jimp = require("jimp");
 cmd({
   pattern: "fullpp",
   alias: ["setpp", "setdp", "pp"],
-  react: "💥",
+  react: "💐",
   desc: "Set full image as bot's profile picture",
   category: "tools",
   filename: __filename
-}, async (mek, sock, { isCreator }) => {
+}, async (m, conn, { isCreator }) => {
   try {
     // Get bot's JID
-    const botJid = sock.user.id;
+    const botJid = conn.user.id;
     
     // Check if sender is either bot or creator
-    if (mek.sender !== botJid && !isCreator) {
-      return await sock.sendMessage(mek.from, {
-        text: "📛 This command can only be used by the bot or its owner."
-      }, { quoted: mek });
+    if (m.sender !== botJid && !isCreator) {
+      return await conn.sendMessage(m.chat, { 
+        text: "📛 This command can only be used by the bot or its owner." 
+      }, { quoted: m });
     }
 
-    const quoted = mek.quoted;
-    if (!quoted || !quoted.mtype || !quoted.mtype.includes("image")) {
-      return sock.sendMessage(mek.from, { 
+    if (!m.quoted || !m.quoted.mtype || !m.quoted.mtype.includes("image")) {
+      return await conn.sendMessage(m.chat, { 
         text: "⚠️ *Please reply to an image to set as full DP.*" 
-      }, { quoted: mek });
+      }, { quoted: m });
     }
 
-    await sock.sendMessage(mek.from, { 
+    await conn.sendMessage(m.chat, { 
       text: "⏳ *Processing image, please wait...*" 
-    }, { quoted: mek });
+    }, { quoted: m });
 
-    const imageBuffer = await sock.downloadMediaMessage(quoted);
+    const imageBuffer = await conn.downloadMediaMessage(m.quoted);
     const image = await Jimp.read(imageBuffer);
 
     // Create blurred background
@@ -46,16 +45,16 @@ cmd({
     const finalImage = await blurredBg.getBufferAsync(Jimp.MIME_JPEG);
 
     // Update bot's profile picture
-    await sock.updateProfilePicture(botJid, finalImage);
+    await conn.updateProfilePicture(botJid, finalImage);
 
-    await sock.sendMessage(mek.from, { 
-      text: "*Profile Pic Updated Successfully • KHAN-MD ✅*" 
-    }, { quoted: mek });
+    await conn.sendMessage(m.chat, { 
+      text: "*Profile Picture Updated Successfully — KHAN-MD* ✅" 
+    }, { quoted: m });
 
   } catch (error) {
     console.error("FullPP Error:", error);
-    await sock.sendMessage(mek.from, { 
+    await conn.sendMessage(m.chat, { 
       text: "❌ Error: " + error.message 
-    }, { quoted: mek });
+    }, { quoted: m });
   }
 });
