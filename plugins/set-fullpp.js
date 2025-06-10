@@ -8,25 +8,26 @@ cmd({
   desc: "Set full image as bot's profile picture",
   category: "tools",
   filename: __filename
-}, async (conn, message, { isCreator }) => {
+}, async (m, sock, { isCreator }) => {
   try {
-    const botNumber = conn.user.id.split(":")[0] + "@s.whatsapp.net";
+    // Get bot's JID (new Baileys method)
+    const botJid = sock.user.id;
     
     // Check if sender is either bot or creator
-    if (message.sender !== botNumber && !isCreator) {
-      return await conn.sendMessage(message.from, {
+    if (m.sender !== botJid && !isCreator) {
+      return await sock.sendMessage(m.from, {
         text: "📛 This command can only be used by the bot or its owner."
-      }, { quoted: message });
+      }, { quoted: m });
     }
 
-    const quoted = message.quoted;
+    const quoted = m.quoted;
     if (!quoted || !quoted.mtype || !quoted.mtype.includes("image")) {
-      return message.reply("⚠️ *Please reply to an image to set as full DP.*");
+      return m.reply("⚠️ *Please reply to an image to set as full DP.*");
     }
 
-    await message.reply("⏳ *Processing image, please wait...*");
+    await m.reply("⏳ *Processing image, please wait...*");
 
-    const imageBuffer = await conn.downloadMediaMessage(quoted);
+    const imageBuffer = await sock.downloadMediaMessage(quoted);
     const image = await Jimp.read(imageBuffer);
 
     // Create blurred background
@@ -41,12 +42,12 @@ cmd({
     const finalImage = await blurredBg.getBufferAsync(Jimp.MIME_JPEG);
 
     // Update bot's profile picture
-    await conn.updateProfilePicture(botNumber, finalImage);
+    await sock.updateProfilePicture(botJid, finalImage);
 
-    await message.reply("✅ *Profile Picture Updated Successfully — KHAN-MD*");
+    await m.reply("✅ *Bot's profile picture updated KHAN-MD*");
 
   } catch (error) {
-    console.error(error);
-    message.reply("❌ Error: " + error.message);
+    console.error("FullPP Error:", error);
+    m.reply("❌ Error: " + error.message);
   }
 });
